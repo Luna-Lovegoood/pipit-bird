@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Audio Explorer</title>
+<script src="leaflet/leaflet.js"></script>
+<link href="leaflet/leaflet.css" rel="stylesheet"/>
+<script src="heatmap/heatmap.js"></script>
+<script src="heatmap/leaflet-heatmap.js"></script>
+<link rel="stylesheet" href="jquery/jquery-ui.min.css">
+<script src="jquery/jquery.min.js"></script>
+<script src="jquery/jquery-ui.min.js"></script>
+<script src="wavesurfer/wavesurfer.min.js"></script>
+<script type="text/javascript" src="wavesurfer/wavesurfer.spectrogram.js"></script>
+<!-- <link rel="stylesheet" href="jquery/jquery-ui.structure.css">
+<link rel="stylesheet" href="jquery/jquery-ui.theme.css">
+<link href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script> -->
+<style type="text/css">
+#nav{
+    height: 60px;
+    background-color: #f5f5f5; 
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+#kasios{
+    float: left;
+    width: 90px;
+    height: 600px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.title{
+    text-align: center;
+    font-size: 19px;
+    font-family: Arial;
+}
+.index{
+    text-align: center;
+    line-height: 15px;
+    font-family: 等线;
+}
+.s-month{
+    line-height: 15px;
+    font-family: 等线;
+}
+hr{
+    border: none;
+    height: 1px;
+    background-color: #ddd;
+}
+.species{
+    float: left;
+    width: 210px;
+    height: 1000px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+#map{
+    float: left;
+    height: 800px;
+    width: 400px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+#map-canvas{
+    height: 400px;
+    width: 400px;
+}
+#amount{
+    border:0; 
+    color:#000; 
+    font-size:14px;
+}
+#amount-base{
+    border:0; 
+    color:#000; 
+    font-size:14px;
+}
+#play{
+    float: left;
+    width: 550px;
+    height: 800px;
+    margin-left: 20px;
+}
+.icon{
+    height: 0px; 
+    width: 0px;
+    padding: 20px; 
+    float: left;
+    background-position: center center; 
+    background-size: 10px 10px; 
+    background-repeat: no-repeat;ij
+}
+.time{
+    line-height: 40px;
+    margin-left: 200px;
+}
+.show{
+    line-height: 40px;
+    float: right;
+    margin-right: 20px;
+}
+ul{
+    list-style: none;
+    /*overflow: hidden;*/
+    float: right;
+    margin: 0px;
+    cursor: default;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+ul li{
+    font-family: Arial; 
+    font-size: 14px; 
+    float: right; 
+    padding-left: 15px; 
+    padding-right: 15px;
+    line-height: 30px; 
+}
+ul li:hover{
+    background-color: #ddd;
+}
+.content{
+    margin-top: 20px;
+    float: left;
+    margin-left: 10px;
+    display: none;
+}
+.active{
+    display: block;
+}
+</style>
+</head>
+
+<body>
+<div id="nav">
+    <ul class="list">
+        <li>year view</li>
+        <li>month view</li>
+        <li>main view</li>
+    </ul>
+    <div style="font-family: Arial; font-size: 22px; line-height: 60px;">Audio Explorer</div>
+</div>
+
+<div class="contain" style="margin-top: 60px;">
+<!--Page 3---------------------------------------------------------------------------------->
+    <div class="content">
+        <div class="species">
+            <div class="title">Species</div><hr/>
+            <div class="s-year">Rose-crested Blue Pipit</div><hr/>
+            <div class="s-year">Blue-collared Zipper</div><hr/>
+            <div class="s-year">Bombadil</div><hr/>
+            <div class="s-year">Broad-winged Jojo</div><hr/>
+            <div class="s-year">Canadian Cootamum</div><hr/>
+            <div class="s-year">Carries Champagne Pipit</div><hr/>
+            <div class="s-year">Darkwing Sparrow</div><hr/>
+            <div class="s-year">Eastern Corn Skeet</div><hr/>
+            <div class="s-year">Green-tipped Scarlet Pipit</div><hr/>
+            <div class="s-year">Lesser Birchbeere</div><hr/>
+            <div class="s-year">Orange Pine Plover</div><hr/>
+            <div class="s-year">Ordinary Snape</div><hr/>
+            <div class="s-year">Pinkfinch</div><hr/>
+            <div class="s-year">Purple Tooting Tout</div><hr/>
+            <div class="s-year">Qax</div><hr/>
+            <div class="s-year">Queenscoat</div><hr/>
+            <div class="s-year">Bent-beak Riffraff</div><hr/>
+            <div class="s-year">Scrawny Jay</div><hr/>
+            <div class="s-year">Vermillion Trillian</div>
+        </div>
+        <div id="yearCav" style="margin-left: 260px; height: 1000px; width: 1000px;"></div>
+    
+    </div>
+<!--Page 2---------------------------------------------------------------------------------->
+    <div class="content">
+        <div class="species">
+            <div class="title">Species</div><hr/>
+            <div class="s-month">Rose-crested Blue Pipit</div><hr/>
+            <div class="s-month">Blue-collared Zipper</div><hr/>
+            <div class="s-month">Bombadil</div><hr/>
+            <div class="s-month">Broad-winged Jojo</div><hr/>
+            <div class="s-month">Canadian Cootamum</div><hr/>
+            <div class="s-month">Carries Champagne Pipit</div><hr/>
+            <div class="s-month">Darkwing Sparrow</div><hr/>
+            <div class="s-month">Eastern Corn Skeet</div><hr/>
+            <div class="s-month">Green-tipped Scarlet Pipit</div><hr/>
+            <div class="s-month">Lesser Birchbeere</div><hr/>
+            <div class="s-month">Orange Pine Plover</div><hr/>
+            <div class="s-month">Ordinary Snape</div><hr/>
+            <div class="s-month">Pinkfinch</div><hr/>
+            <div class="s-month">Purple Tooting Tout</div><hr/>
+            <div class="s-month">Qax</div><hr/>
+            <div class="s-month">Queenscoat</div><hr/>
+            <div class="s-month">Bent-beak Riffraff</div><hr/>
+            <div class="s-month">Scrawny Jay</div><hr/>
+            <div class="s-month">Vermillion Trillian</div>
+        </div>
+        <div id="monthCav" style="margin-left: 260px; height: 1000px; width: 1000px;"></div>
+    </div>
+<!--Page 1---------------------------------------------------------------------------------->
+    <div class="content active">
+        <div id="kasios">
+            <div class="title">Kasios</div><hr/>
+            <div class="index" onclick="changeKasios(this)">1</div><hr/>
+            <div class="index" onclick="changeKasios(this)">2</div><hr/>
+            <div class="index" onclick="changeKasios(this)">3</div><hr/>
+            <div class="index" onclick="changeKasios(this)">4</div><hr/>
+            <div class="index" onclick="changeKasios(this)">5</div><hr/>
+            <div class="index" onclick="changeKasios(this)">6</div><hr/>
+            <div class="index" onclick="changeKasios(this)">7</div><hr/>
+            <div class="index" onclick="changeKasios(this)">8</div><hr/>
+            <div class="index" onclick="changeKasios(this)">9</div><hr/>
+            <div class="index" onclick="changeKasios(this)">10</div><hr/>
+            <div class="index" onclick="changeKasios(this)">11</div><hr/>
+            <div class="index" onclick="changeKasios(this)">12</div><hr/>
+            <div class="index" onclick="changeKasios(this)">13</div><hr/>
+            <div class="index" onclick="changeKasios(this)">14</div><hr/>
+            <div class="index" onclick="changeKasios(this)">15</div>
+        </div>
+        <div class="species">
+            <div class="title">Species</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Rose-crested Blue Pipit</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Blue-collared Zipper</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Bombadil</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Broad-winged Jojo</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Canadian Cootamum</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Carries Champagne Pipit</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Darkwing Sparrow</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Eastern Corn Skeet</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Green-tipped Scarlet Pipit</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Lesser Birchbeere</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Orange Pine Plover</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Ordinary Snape</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Pinkfinch</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Purple Tooting Tout</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Qax</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Queenscoat</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Bent-beak Riffraff</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Scrawny Jay</div><hr/>
+            <div class="index" onclick="changeSpecies(this)">Vermillion Trillian</div>
+        </div>
+        <div id="map">
+            <div id = "map-canvas"></div>
+            <div id="history" style="position: absolute; left: 732px; top: 490px; font-size: 12px; cursor: default;">Show History</div>
+            <div id="toggle" style="position: absolute; left: 640px; top: 490px; font-size: 12px; cursor: default;">Toggle Point</div>
+            <input type="text" id="amount" style="width: 400px;margin-top: 20px;margin-bottom: 4px;"/>
+            <div id="slider-range" style="height: 4px;"></div>
+            <div id="slider-toggle" style="height: 4px;"></div>
+            <input type="text" id="amount-base" style="width: 400px;margin-top: 20px;margin-bottom: 4px;"/>
+            <div id="slider-base" style="height: 4px;"></div>
+        </div>
+        <div id="play">
+            <div id="kasios-audio" style="background-color: #f5f5f5;">
+                <div id="k-text" style="line-height: 30px;font-family: Arial;font-size: 20px">
+                    Kasios Audio:&nbsp</br>
+                   <i style="font-size: 16px; font-style: initial;">Please select an audio file to analyze</i>
+                </div>
+                <div id="k-waveform">
+                    <div id="k-wave" style="height: 128px;"></div>
+                    <div id="k-spectrogram"></div>
+                    <div id="k-ctrl" style="height: 40px; background-color: #ddd">
+                        <div class="icon" style="background-image: url(icon/tui.svg);" onclick="backward(this)"></div>
+                        <div class="icon" style="background-image: url(icon/play.svg);" onclick="playPause(this)"></div>
+                        <div class="icon" style="background-image: url(icon/jin.svg);" onclick="forward(this)"></div>
+                        <div class="show" onclick="spectrogram(this)">Show Spectrogram</div>
+                        <div class="time" id="k-time">00:00&nbsp/&nbsp00:00</div>
+                    </div>
+                </div>            
+            </div>
+            <div id="species-audio" style="margin-top: 20px; background-color: #f5f5f5">
+                <div id="s-text" style="line-height: 30px;font-family: Arial;font-size: 20px">
+                    Species Audio:&nbsp</br>
+                     <i style="font-size: 16px; font-style: initial;">Please select an audio file to analyze</i>
+                </div>
+                <div id="s-waveform">
+                    <div id="s-wave" style="height: 128px;"></div>
+                    <div id="s-spectrogram"></div>
+                    <div id="s-ctrl" style="height: 40px; background-color: #ddd">
+                        <div class="icon" style="background-image: url(icon/tui.svg);" onclick="backward(this)"></div>
+                        <div class="icon" style="background-image: url(icon/play.svg);" onclick="playPause(this)"></div>
+                        <div class="icon" style="background-image: url(icon/jin.svg);" onclick="forward(this)"></div>
+                        <div class="show" onclick="spectrogram(this)">Show Spectrogram</div>
+                        <div class="time" id="s-time">00:00&nbsp/&nbsp00:00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+$(function() {
+    $(".list li").click(function() {
+        $(this).addClass('active');
+        $(this).siblings().removeClass('active');
+        $('.content').eq($('.list li').index(this))
+        .addClass('active').siblings()
+        .removeClass('active');
+    });
+});
+//脚本---------------------------------------------------------------------------------------
+var test2 = {
+    max: 40,
+    data: [{x: 100, y:100, value: 30},{x: 110, y:110, value: 50},{x: 80, y:80, value: 50},{x: 75, y:75, value: 50},{x: 50, y:70, value: 50},{x: 100, y:110, value: 50},{x: 120, y:100, value: 50},{x: 20, y:100, value: 50}]
+};
+var test1 = {
+    max: 60,
+    data: [{x: 100, y:100, value: 50}]
+};
+
+var  realData, changeData, draw, obj = {}, obj_base = {}, month_obj = {}, duration, duration2, toggle_count = false, history_count = false;
+
+var csys = [[140,119],[63,153],[70,136],[78,150],[60,90],[126,103],[71,121],[78,62],[61,145],[45,39],[132,106],[61,20],[35,160],[40,125],[110,121]];
+var str_month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+var wavesurfer = WaveSurfer.create({
+    //width: 10000,
+    //height: 500,
+    mediaControls: true,
+    scrollParent: true,
+    container: '#k-wave',
+    backend: 'MediaElement',
+    //mediaType: 'mp3',
+    waveColor: '#a0abbc',
+    progressColor: '#001942',
+    hideScrollbar: true,
+    //height: 600,
+    plugins: [
+        WaveSurfer.spectrogram.create({
+            container: '#k-spectrogram',
+            labels: false
+            //colorMap: colorMap
+        })
+    ]
+});
+var wavesurfer2 = WaveSurfer.create({
+    scrollParent: true,
+    container: '#s-wave',
+    mediaType: 'mp3',
+    waveColor: '#a0abbc',
+    progressColor: '#001942',
+    hideScrollbar: true,
+    //height: 80,
+    plugins: [
+        WaveSurfer.spectrogram.create({
+            container: '#s-spectrogram',
+            labels: false
+            //colorMap: colorMap
+        })
+    ]
+});
+
+//热力图------------------------------------------------------------------------------------
+var bfg = {
+    radius: 8, //大小
+    maxOpacity: 0.7,
+    minOpacity: 0.6,
+    blur: 1, //平滑
+    scaleRadius: true,
+    useLocalExtrema: true,
+    latField: 'x',
+    lngField: 'y',
+    valueField: 30, //'value'
+    gradient: { //渐变
+        '.2': '#eaeaea',
+        '.5': '#cbadac',
+        '.7': '#b17b79',
+        '.9': '#85403e'
+    }
+};
+var cfg = {
+    radius: 8,
+    maxOpacity: 1,
+    minOpacity: 0,
+    blur: 1,
+    scaleRadius: true,
+    useLocalExtrema: true,
+    latField: 'x',
+    lngField: 'y',
+    valueField: 30, //'value'
+    gradient: {
+        '.15': '#eac6cf',
+        '.35': '#ea9eb0',
+        '.5': '#f5b59c',
+        '.95': '#fffbda'
+    }
+};
+var cfg_lil = {radius: 3,maxOpacity: 1,minOpacity: 0,blur: 0.6,scaleRadius: true,useLocalExtrema: true,latField: 'x',lngField: 'y',gradient: {'.15': '#eac6cf','.35': '#ea9eb0','.5': '#f5b59c','.95': '#fffbda'}};
+
+$('.s-month').click(function() {
+    document.getElementById('monthCav').innerHTML = '';
+    var opacity;
+    month_obj = {};
+    console.log(this.innerHTML);
+    month_obj.value = this.innerHTML;
+    $.get('http://localhost:3000/month', month_obj, function(docs) {
+        console.log(docs);
+        for (var i = 0; i < 12; i++) {
+            var lil = document.createElement('div');
+            lil.style.cssText = 'width: 220px; height: 250px; margin: 10px; margin-top: 0px; float: left; overflow: hidden;'
+            document.getElementById('monthCav').appendChild(lil);
+            var label = document.createElement('div');
+            label.innerText = str_month[i];
+            label.style.cssText = 'text-align: center; font-size: 16px; width: 200px; height:25px;'
+            lil.appendChild(label);
+            var canvas = document.createElement('div');
+            canvas.id = 'cav' + (i+1);
+            canvas.style.cssText = 'width: 220px; height: 220px;';
+            lil.appendChild(canvas);
+            monthHeatmap = new HeatmapOverlay(cfg_lil);
+            if (docs[i].length == 0) {
+                document.getElementById('cav' + (i+1)).parentElement.style.cssText = 'width: 220px; height: 250px; margin: 10px; margin-top: 0px; float: left; overflow: hidden; opacity:0.2;';
+            }
+            var mapp = L.map(canvas, { //关键步骤
+                center: [55,55],
+                zoom: 1,
+                zoomControl: false,
+                scrollWheelZoom: false,
+                attributionControl: false,
+                dragging: false,
+                crs: L.CRS.Simple //规定坐标系
+            })
+            .addLayer(monthHeatmap);
+            L.imageOverlay("bg.bmp", [[0,0], [110,110]], {
+                zIndex: -100,
+                //opacity: opacity
+            }).addTo(mapp);
+            console.log('done', i);
+            var draw = {
+                max: 60,
+                data: docs[i]
+            }
+            monthHeatmap.setData(draw);
+        }
+    })    
+});
+
+$('.s-year').click(function() {
+    document.getElementById('yearCav').innerHTML = '';
+    var opacity;
+    year_obj = {};
+    console.log(this.innerHTML);
+    year_obj.value = this.innerHTML;
+    $.get('http://localhost:3000/year', year_obj, function(docs) {
+        console.log(docs);
+        /*for (var i = 0; i < docs.length; i++) {
+
+        }*/
+    });
+});
+
+var baseLayer = new HeatmapOverlay(bfg);
+var heatmapLayer = new HeatmapOverlay(cfg);
+//baseLayer.setData({max: 60, data: [{x: -100, y:-100, value: 50}]});
+//heatmapLayer.setData({max: 60, data: [{x: -100, y:-100, value: 50}]});
+
+//初始化地图 center地图中心 zoom缩放等级 必填
+var map = L.map('map-canvas', {
+  center: [100,100],  
+  zoom: 1,
+  layers: [baseLayer, heatmapLayer],  //初始化图层
+  crs: L.CRS.Simple, //规定坐标系
+  attributionControl: false
+})
+//.addLayer(baseLayer)
+//.addLayer(heatmapLayer);
+
+document.getElementsByClassName("leaflet-zoom-hide")[1].style.cssText = "width: 400px; height: 400px; position: absolute; transform: translate(0px, 0px); top: 0px; left: 0px";
+
+//用于在地图的特定边界上加载和显示单个图像 (<url>, <lat,lng>)
+L.imageOverlay("bg.bmp", [[0,0], [200,200]], {
+    zIndex: -100,
+}).addTo(map);
+//在地图上添加标记
+marker = L.marker([-50, -50]).addTo(map);
+
+function changeKasios(click) {
+    var index = parseInt(click.innerHTML) - 1;
+    console.log(index+1);
+    lat = csys[index][0];
+    lng = csys[index][1];
+    marker.setLatLng([parseInt(lat), parseInt(lng)]) //重置标记位置
+    .bindPopup("Recording " + (index+1) +": [" + csys[index] + "]"); //openPopup()默认打开
+
+    document.getElementById('k-text').innerHTML = 'Kasios Audio: ' + (index+1);
+    document.getElementById("k-waveform").style.display = "block";
+    wavesurfer.load('kasios/'+[index+1]+'.mp3');
+    //wavesurfer.zoom(40);
+    wavesurfer.on('ready', function () {
+        var min = parseInt(parseInt(wavesurfer.getDuration())/60);
+        var sec = parseInt(wavesurfer.getDuration())%60;
+        if (sec<10)  sec = '0' + sec;
+        duration = document.getElementById('k-time').innerHTML = '0' + min + ':' + sec;
+        document.getElementById('k-time').innerHTML = '00:00 / 0' + min + ':' + sec;
+    });
+}
+
+//changespecies-----------------------------------------------------------------------------
+function changeSpecies(click) {
+    console.log('h', history_count);
+    console.log('t', toggle_count);
+    obj = {};
+    obj.value = click.innerHTML;
+    obj_base = {};
+    obj_base.value = click.innerHTML;
+    console.log(obj);
+    document.getElementById('history').style.display = 'block';
+    document.getElementById('toggle').style.display = 'block';
+    document.getElementById('slider-range').style.display = 'block';
+    document.getElementById('slider-toggle').style.display = 'none';
+    $.get("http://localhost:3000/species", obj, function(docs) {
+        //console.log(docs);
+        //Math.min.apply(Math, array) 获取数组最值
+        //map用于提取在多对象数组中提取某一个属性，形成新的数组
+        var minYear = Math.min.apply(Math, docs.map(function(o) {return parseInt(o.year)}));
+        var maxYear = Math.max.apply(Math, docs.map(function(o) {return parseInt(o.year)}));
+        var leftYear = minYear;
+        var rightYear = maxYear;
+        realData = {max: 40, data: docs};
+        //console.log(realData);
+        heatmapLayer.setData(realData);
+        var baseData = realData;
+        if (history_count == true) {    //隐藏
+            baseLayer.setData(baseData);
+        }
+        $("#amount").val("Years displayed: " + minYear + " - " + maxYear);
+        $("#slider-range").slider({
+            range: true,
+            min: minYear,
+            max: maxYear,
+            values: [leftYear, rightYear],
+            slide: function(event, ui) {
+                $("#amount").val("Years displayed: " + ui.values[0] + " - " + ui.values[1]);
+                obj.left = ui.values[0];
+                obj.right = ui.values[1];
+                console.log(obj);
+                $.get("http://localhost:3000/species", obj, function(docs) {
+                    console.log(docs);
+                    changeData = {max: 40, data: docs};
+                    heatmapLayer.setData(changeData);
+                });
+                leftYear = ui.values[0];
+            }
+            //change: function(event, ui) {}
+        });
+        $("#slider-toggle").slider({
+            min: minYear,
+            max: maxYear,
+            value: leftYear,
+            slide: function(event, ui) {
+                $("#amount").val("Years displayed: " + ui.value);
+                obj.left = ui.value;
+                delete obj.right;
+                console.log(obj);
+                $.get("http://localhost:3000/species", obj, function(docs) {
+                    console.log(docs);
+                    changeData = {max: 40, data: docs};
+                    heatmapLayer.setData(changeData);
+                });
+                leftYear = ui.value;
+                rightYear = maxYear;
+            }
+        });
+        $("#amount-base").val("Comparing with: " + minYear + " - " + maxYear);
+        $("#slider-base").slider({
+            range: true,
+            min: minYear,
+            max: maxYear,
+            values: [leftYear, rightYear],
+            slide: function(event, ui) {
+                $("#amount-base").val("Comparing with: " + ui.values[0] + " - " + ui.values[1]);
+                obj_base.left = ui.values[0];
+                obj_base.right = ui.values[1];
+                $.get("http://localhost:3000/species", obj_base, function(docs) {
+                    baseData = {max: 40, data: docs};
+                    baseLayer.setData(baseData);
+                });                    
+            }                
+        });
+        document.getElementById('toggle').onclick = (function() {
+            console.log('toggle', toggle_count);
+            if (toggle_count == false) {
+                document.getElementById('slider-range').style.display = 'none';
+                document.getElementById('slider-toggle').style.display = 'block';
+                $("#slider-toggle").slider({value: leftYear});
+                toggle_count = true;
+                console.log('显示');
+            } else {
+                document.getElementById('slider-range').style.display = 'block';
+                document.getElementById('slider-toggle').style.display = 'none';
+                $("#slider-range").slider({values: [leftYear, rightYear]});
+                toggle_count = false;
+                console.log('隐藏');
+            }
+        });
+        document.getElementById('history').onclick = (function() {
+            console.log('history', history_count);
+            if (history_count == false) {    //显示
+                document.getElementById("slider-base").style.display = "block";
+                document.getElementById("amount-base").style.display = "block";
+                document.getElementById("history").innerHTML = 'Hide History';
+                baseLayer.setData(baseData);
+                history_count = true;
+                console.log('显示');
+            }
+            else {    //隐藏
+                document.getElementById("slider-base").style.display = "none";
+                document.getElementById("amount-base").style.display = "none";
+                document.getElementById("history").innerHTML = 'Show History';
+                baseLayer.setData({
+                    max: 40,
+                    data: [{x:-100, y:-100, value:30}]
+                });
+                history_count = false;
+                console.log('隐藏');
+            }
+        });
+    });
+
+    document.getElementById("s-waveform").style.display = "block";
+    document.getElementById('s-text').innerHTML = 'Species Audio: ' + click.innerHTML;
+    wavesurfer2.load('species/'+click.innerHTML+'.mp3');
+    wavesurfer2.on('ready', function () {
+        var min = parseInt(parseInt(wavesurfer2.getDuration())/60);
+        var sec = parseInt(wavesurfer2.getDuration())%60;
+        if (sec<10)  sec = '0' + sec;
+        duration2 = document.getElementById('s-time').innerHTML = '0' + min + ':' + sec;
+        document.getElementById('s-time').innerHTML = '00:00 / 0' + min + ':' + sec;
+    });
+}
+function showtime() {
+    var min = parseInt(parseInt(wavesurfer.getCurrentTime())/60);
+    var sec = parseInt(wavesurfer.getCurrentTime())%60;
+    if (sec<10)  sec = '0' + sec;
+    document.getElementById('k-time').innerHTML = '0' + min + ':' + sec + ' / ' + duration;
+    var min2 = parseInt(parseInt(wavesurfer2.getCurrentTime())/60);
+    var sec2 = parseInt(wavesurfer2.getCurrentTime())%60;
+    if (sec2<10)  sec2 = '0' + sec2;
+    document.getElementById('s-time').innerHTML = '0' + min2 + ':' + sec2 + ' / ' + duration2;
+}
+//播放与暂停---------------------------------------------------------------------------------
+function playPause(click) {
+    console.log(click.parentElement.id);
+    if (click.parentElement.id == "k-ctrl") {
+        wavesurfer.playPause();
+        if (wavesurfer.isPlaying()==true) {
+            click.style.cssText="background-image: url(icon/pause.svg)";
+            setInterval("showtime()", 1000);
+        } else  click.style.cssText="background-image: url(icon/play.svg)";
+    } else {
+        wavesurfer2.playPause();
+        if (wavesurfer2.isPlaying()==true) {
+            click.style.cssText="background-image: url(icon/pause.svg)";
+            setInterval("showtime()", 1000);
+        } else  click.style.cssText="background-image: url(icon/play.svg)";
+    }
+}
+function backward(click) {
+    console.log(click.parentElement.id);
+    if (click.parentElement.id == "k-ctrl") {
+        wavesurfer.skipBackward(5);
+    } else {
+        wavesurfer2.skipBackward(5);
+    }
+}
+function forward(click) {
+    console.log(click.parentElement.id);
+    if (click.parentElement.id == "k-ctrl") {
+        wavesurfer.skipForward(5);
+    } else {
+        wavesurfer2.skipForward(5);
+    }
+}
+function spectrogram(click) {
+    ks_count = !ks_count;
+    console.log(ks_count);
+    console.log(click.parentElement.id);
+    if (ks_count == true && click.parentElement.id == "k-ctrl") {
+        document.getElementById('k-wave').style.display = 'none';
+        document.getElementById("k-spectrogram").style.display = "block";
+    }else if (ks_count == false && click.parentElement.id == "k-ctrl") {
+        document.getElementById('k-wave').style.display = 'block';
+        document.getElementById("k-spectrogram").style.display = "none";
+    }else if (ks_count == true && click.parentElement.id != "k-ctrl") {
+        document.getElementById('s-wave').style.display = 'none';
+        document.getElementById("s-spectrogram").style.display = "block";
+    }else if (ks_count == false && click.parentElement.id != "k-ctrl") {
+        document.getElementById('s-wave').style.display = 'block';
+        document.getElementById("s-spectrogram").style.display = "none";
+    }
+}
+
+document.getElementById("k-waveform").style.display = "none";
+document.getElementById("k-spectrogram").style.display = "none";
+document.getElementById("s-waveform").style.display = "none";
+document.getElementById("s-spectrogram").style.display = "none";
+document.getElementById("slider-base").style.display = "none";
+document.getElementById("amount-base").style.display = "none";
+document.getElementById("history").style.display = "none";
+document.getElementById("toggle").style.display = "none";
+document.getElementById("slider-toggle").style.display = "none";
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "pipit-bird",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Leon, Luna, Angeli",
+  "license": "ISC",
+  "devDependencies": {
+    "express": "^4.17.1",
+    "http-server": "^0.12.3",
+    "mongodb": "^3.6.3"
+  }
+}
