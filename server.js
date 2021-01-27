@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
 const mongoClient = require('mongodb').MongoClient;
-const url = "mongodb://127.0.0.1:27017";
+//const url = "mongodb://127.0.0.1:27017";
+const url = "mongodb://pipit-bird:pipit-bird20@182.92.174.94:27017/pipit-bird"; // Luna 2020.1.27 本地连接改为远程连接
 
 //解决跨域问题
 app.all('*',function(req,res,next){
@@ -19,7 +20,7 @@ mongoClient.connect(url, function(err, client) {
   }
   console.log('Connection successfully to server');
 
-  var db = client.db("MC1_2018");
+  var db = client.db("pipit-bird"); // Luna 2020.1.27 云数据库名称改为pipit-bird
   var collection = db.collection("allbirds");
 
   app.get("/species", function(req, res) {
