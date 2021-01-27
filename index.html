@@ -2,20 +2,19 @@
 <html>
 <head>
 <title>Audio Explorer</title>
-<script src="leaflet/leaflet.js"></script>
-<link href="leaflet/leaflet.css" rel="stylesheet"/>
-<script src="heatmap/heatmap.js"></script>
-<script src="heatmap/leaflet-heatmap.js"></script>
-<link rel="stylesheet" href="jquery/jquery-ui.min.css">
-<script src="jquery/jquery.min.js"></script>
-<script src="jquery/jquery-ui.min.js"></script>
-<script src="wavesurfer/wavesurfer.min.js"></script>
-<script type="text/javascript" src="wavesurfer/wavesurfer.spectrogram.js"></script>
-<!-- <link rel="stylesheet" href="jquery/jquery-ui.structure.css">
-<link rel="stylesheet" href="jquery/jquery-ui.theme.css">
-<link href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script> -->
+<script src="lib/leaflet/leaflet.js"></script>
+<link href="lib/leaflet/leaflet.css" rel="stylesheet"/>
+
+<script src="lib/heatmap/heatmap.js"></script>
+<script src="lib/heatmap/leaflet-heatmap.js"></script>
+
+<link rel="stylesheet" href="lib/jquery/jquery-ui.min.css">
+<script src="lib/jquery/jquery.min.js"></script>
+<script src="lib/jquery/jquery-ui.min.js"></script>
+
+<script src="lib/wavesurfer/wavesurfer.min.js"></script>
+<script src="lib/wavesurfer/wavesurfer.spectrogram.js"></script>
+
 <style type="text/css">
 #nav{
     height: 60px;
@@ -263,9 +262,9 @@ ul li:hover{
                     <div id="k-wave" style="height: 128px;"></div>
                     <div id="k-spectrogram"></div>
                     <div id="k-ctrl" style="height: 40px; background-color: #ddd">
-                        <div class="icon" style="background-image: url(icon/tui.svg);" onclick="backward(this)"></div>
-                        <div class="icon" style="background-image: url(icon/play.svg);" onclick="playPause(this)"></div>
-                        <div class="icon" style="background-image: url(icon/jin.svg);" onclick="forward(this)"></div>
+                        <div class="icon" style="background-image: url(image/tui.svg);" onclick="backward(this)"></div>
+                        <div class="icon" style="background-image: url(image/play.svg);" onclick="playPause(this)"></div>
+                        <div class="icon" style="background-image: url(image/jin.svg);" onclick="forward(this)"></div>
                         <div class="show" onclick="spectrogram(this)">Show Spectrogram</div>
                         <div class="time" id="k-time">00:00&nbsp/&nbsp00:00</div>
                     </div>
@@ -280,9 +279,9 @@ ul li:hover{
                     <div id="s-wave" style="height: 128px;"></div>
                     <div id="s-spectrogram"></div>
                     <div id="s-ctrl" style="height: 40px; background-color: #ddd">
-                        <div class="icon" style="background-image: url(icon/tui.svg);" onclick="backward(this)"></div>
-                        <div class="icon" style="background-image: url(icon/play.svg);" onclick="playPause(this)"></div>
-                        <div class="icon" style="background-image: url(icon/jin.svg);" onclick="forward(this)"></div>
+                        <div class="icon" style="background-image: url(image/tui.svg);" onclick="backward(this)"></div>
+                        <div class="icon" style="background-image: url(image/play.svg);" onclick="playPause(this)"></div>
+                        <div class="icon" style="background-image: url(image/jin.svg);" onclick="forward(this)"></div>
                         <div class="show" onclick="spectrogram(this)">Show Spectrogram</div>
                         <div class="time" id="s-time">00:00&nbsp/&nbsp00:00</div>
                     </div>
@@ -324,7 +323,7 @@ var wavesurfer = WaveSurfer.create({
     mediaControls: true,
     scrollParent: true,
     container: '#k-wave',
-    backend: 'MediaElement',
+    //backend: 'MediaElement', //默认播放控件
     //mediaType: 'mp3',
     waveColor: '#a0abbc',
     progressColor: '#001942',
@@ -341,7 +340,7 @@ var wavesurfer = WaveSurfer.create({
 var wavesurfer2 = WaveSurfer.create({
     scrollParent: true,
     container: '#s-wave',
-    mediaType: 'mp3',
+    //mediaType: 'mp3',
     waveColor: '#a0abbc',
     progressColor: '#001942',
     hideScrollbar: true,
@@ -426,7 +425,7 @@ $('.s-month').click(function() {
                 crs: L.CRS.Simple //规定坐标系
             })
             .addLayer(monthHeatmap);
-            L.imageOverlay("bg.bmp", [[0,0], [110,110]], {
+            L.imageOverlay("image/bg.bmp", [[0,0], [110,110]], {
                 zIndex: -100,
                 //opacity: opacity
             }).addTo(mapp);
@@ -473,7 +472,7 @@ var map = L.map('map-canvas', {
 document.getElementsByClassName("leaflet-zoom-hide")[1].style.cssText = "width: 400px; height: 400px; position: absolute; transform: translate(0px, 0px); top: 0px; left: 0px";
 
 //用于在地图的特定边界上加载和显示单个图像 (<url>, <lat,lng>)
-L.imageOverlay("bg.bmp", [[0,0], [200,200]], {
+L.imageOverlay("image/bg.bmp", [[0,0], [200,200]], {
     zIndex: -100,
 }).addTo(map);
 //在地图上添加标记
@@ -649,15 +648,15 @@ function playPause(click) {
     if (click.parentElement.id == "k-ctrl") {
         wavesurfer.playPause();
         if (wavesurfer.isPlaying()==true) {
-            click.style.cssText="background-image: url(icon/pause.svg)";
+            click.style.cssText="background-image: url(image/pause.svg)";
             setInterval("showtime()", 1000);
-        } else  click.style.cssText="background-image: url(icon/play.svg)";
+        } else  click.style.cssText="background-image: url(image/play.svg)";
     } else {
         wavesurfer2.playPause();
         if (wavesurfer2.isPlaying()==true) {
-            click.style.cssText="background-image: url(icon/pause.svg)";
+            click.style.cssText="background-image: url(image/pause.svg)";
             setInterval("showtime()", 1000);
-        } else  click.style.cssText="background-image: url(icon/play.svg)";
+        } else  click.style.cssText="background-image: url(image/play.svg)";
     }
 }
 function backward(click) {
