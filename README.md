@@ -11,8 +11,6 @@
 
 ## 项目运行方式
 
-0. 启动 mongodb 服务
-
 1. 进入项目文件夹 `cd /Users/luna/Documents/project/pipit-bird`
 
 2. 安装依赖 `pipit-bird > npm install`
